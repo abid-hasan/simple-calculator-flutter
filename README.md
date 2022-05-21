@@ -2,4 +2,4 @@
 
 Another boring flutter calculator.
 
-### Published file: https://abid.gq/flutter/simple-calculator.apk
+### Published file: https://abid-hasan.github.io/flutter/simple-calculator.apk
