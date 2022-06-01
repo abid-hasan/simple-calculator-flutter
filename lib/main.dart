@@ -12,7 +12,7 @@ class Calculator extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Simple Calculator",
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.indigo,
       ),
       home: SimpleCalculator(),
     );
@@ -27,43 +27,57 @@ class SimpleCalculator extends StatefulWidget {
 }
 
 class _SimpleCalculatorState extends State<SimpleCalculator> {
-  String equation = "0";
-  String result = "0";
-  String expression = "";
-  double equationFontSize = 38;
-  double resultFontSize = 48;
+  String _equation = "0";
+  String _result = "0";
+  String _expression = "";
+  double _equationFontSize = 38;
+  double _resultFontSize = 48;
+  bool _isEqualPressed = false;
 
   buttonPressed(String buttonText) {
     setState(() {
       if (buttonText == "AC") {
-        equation = "0";
-        result = "0";
-        equationFontSize = 38;
-        resultFontSize = 48;
+        _isEqualPressed = false;
+        _equation = "0";
+        _result = "0";
+        _equationFontSize = 38;
+        _resultFontSize = 48;
       } else if (buttonText == "⌫") {
-        equationFontSize = 48;
-        resultFontSize = 38;
-        equation = equation.substring(0, equation.length - 1);
-        if (equation == "") equation = "0";
-      } else if (buttonText == "=") {
-        equationFontSize = 38;
-        resultFontSize = 48;
+        if (_result == "Error") return;
 
-        expression = equation;
+        _isEqualPressed = false;
+        _equationFontSize = 48;
+        _resultFontSize = 38;
+        _equation = _equation.substring(0, _equation.length - 1);
+        if (_equation == "") _equation = "0";
+      } else if (buttonText == "=") {
+        _isEqualPressed = true;
+
+        _equationFontSize = 38;
+        _resultFontSize = 48;
+
+        _expression = _equation;
 
         try {
           Parser p = Parser();
-          Expression exp = p.parse(expression);
+          Expression exp = p.parse(_expression);
 
           ContextModel cm = ContextModel();
-          equation = result = "${exp.evaluate(EvaluationType.REAL, cm)}";
+          _result = "${exp.evaluate(EvaluationType.REAL, cm)}";
         } catch (e) {
-          result = "Error";
+          _result = "Error";
         }
       } else {
-        equationFontSize = 48;
-        resultFontSize = 38;
-        equation == "0" ? equation = buttonText : equation += buttonText;
+        if (_result == "Error") return;
+
+        if (_isEqualPressed) {
+          _equation = _result;
+          _isEqualPressed = false;
+        }
+
+        _equationFontSize = 48;
+        _resultFontSize = 38;
+        _equation == "0" ? _equation = buttonText : _equation += buttonText;
       }
     });
   }
@@ -98,16 +112,16 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
           alignment: Alignment.centerRight,
           padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
           child: Text(
-            equation,
-            style: TextStyle(fontSize: equationFontSize),
+            _equation,
+            style: TextStyle(fontSize: _equationFontSize),
           ),
         ),
         Container(
           alignment: Alignment.centerRight,
           padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
           child: Text(
-            result,
-            style: TextStyle(fontSize: resultFontSize),
+            _result,
+            style: TextStyle(fontSize: _resultFontSize),
           ),
         ),
         Expanded(child: Divider()),

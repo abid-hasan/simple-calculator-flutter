@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="gq.abid.simple_calculator_flutter">
+    package="live.abid.simple_calculator_flutter">
    <application
         android:label="Simple Calculator"
         android:name="${applicationName}"
